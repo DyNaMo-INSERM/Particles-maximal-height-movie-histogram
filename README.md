@@ -1,2 +1,57 @@
 # Particles-maximal-height-movie-histogram
 The automatic determination of the maximal height of each protein laying on the mica support that is implemented using the macro coding language of free available (Fiji is just) ImageJ software and plugins. The code of the macro is provided below:
+//----------------------------//
+
+waitForUser("adjust brightness/constrast so there are no pixels saturated & Optimized for Particles of 5-8pxls size "); 
+run("8-bit");
+rename("raw_video");
+run("Duplicate...", "duplicate");
+run("Despeckle", "stack");
+run("Subtract Background...", "rolling=50 sliding disable stack");
+run("Enhance Contrast...", "saturated=0.05 process_all use");
+run("Gaussian Blur...", "sigma=2 stack");
+run("Unsharp Mask...", "radius=3 mask=0.60 stack");
+run("Gaussian Blur...", "sigma=2 stack");
+run("Unsharp Mask...", "radius=3 mask=0.60 stack");
+run("Gaussian Blur...", "sigma=2 stack");
+run("Unsharp Mask...", "radius=3 mask=0.60 stack");
+run("Unsharp Mask...", "radius=3 mask=0.60 stack");
+run("Unsharp Mask...", "radius=3 mask=0.60 stack");
+run("Local Thickness (masked, calibrated, silent)");
+run("Multiply...", "value=255.000 stack");
+run("8-bit");
+
+setAutoThreshold("Triangle");
+run("Convert to Mask", "method=Triangle background=Dark calculate create");
+run("Dilate", "stack");
+run("Dilate", "stack");
+run("Divide...", "value=255.000 stack");
+rename("MASK_raw_video-1_LocThk");
+imageCalculator("Multiply create stack", "raw_video","MASK_raw_video-1_LocThk");
+
+selectWindow("MASK_raw_video-1_LocThk"); close(); 
+selectWindow("raw_video-1"); close();
+
+n = nSlices;  
+for(i = 0;i<n;i++){ 
+	selectWindow("Result of raw_video"); 
+	setSlice(1+i);
+	run("Find Maxima...", "prominence=15 output=[Single Points]");
+}
+ 
+run("Images to Stack", "use");
+run("Divide...", "value=255.000 stack");
+rename("Ones_stack");
+
+imageCalculator("Multiply create stack", "raw_video","Ones_stack");
+run("Maximum...", "radius=2 stack");
+rename("circlesOfHeightWithMembraneLevel");
+run("Duplicate...", "duplicate");
+  
+//////Removes circles at membrane height///
+run("Convert to Mask", "method=Default background=Dark calculate create");
+run("Divide...", "value=255.000 stack");
+rename("Mask_1s_at_circles_OutOfMembraneplane"); 
+imageCalculator("Multiply create stack", "circlesOfHeightWithMembraneLevel", "Mask_1s_at_circles_OutOfMembraneplane");
+rename("circlesOfHeightWithOUT_MembraneLevel");
+run("Cascade");
