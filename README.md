@@ -1,5 +1,8 @@
 # Particles-maximal-height-movie-histogram
-The automatic determination of the maximal height of each protein laying on the mica support that is implemented using the macro coding language of free available (Fiji is just) ImageJ software and plugins. The code of the macro is provided below:
+On a tiff stack of a movie of HS-AFM. The automatic determination of the maximal height of each protein lying on the mica support that is implemented using the macro coding language of free available (Fiji is just) ImageJ software and plugins. The code of the macro is provided below:
+
+After running the code, a histogram of maximal height of the molecules can be done frame by frame, or of the full stack of the movie, using the functions of histogram of ImageJ. 
+
 //----------------------------//
 
 waitForUser("adjust brightness/constrast so there are no pixels saturated & Optimized for Particles of 5-8pxls size "); 
